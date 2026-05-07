@@ -15,7 +15,7 @@
 > Required. Write this before writing any code. Describe your plan: what you will
 > implement first, what parts you expect to be difficult, and how you plan to test.
 
-_Your entry here._
+The only thing I am certain I should implement right now is finding the shortest path between all interlocations in M. I will implement this first using multiple runs of Dijkstra's on each location given in M and the start location S and tabulate the results of each run similarly to what was shown in ASSIGNMENT.md. I expect the most difficult part will be the computation of the optimal route, as it could get quite costly on time complexity if I do not bound each iteration properly.
 
 ---
 

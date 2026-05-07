@@ -25,16 +25,9 @@ import heapq
 # =============================================================================
 
 def explain_problem():
-    """
-    Returns
-    -------
-    str
-        Your Part 1 README answers, written as a string.
-        Must match what you wrote in README Part 1.
-
-    TODO
-    """
-    return "TODO"
+    return """The objective of the torchbearer is to go from S to T while visiting every relic location in M, not just going from S to T.
+            The decision still remains to choose the shortest path that visits every location in M starting at S and ending at T.
+            Every potential solution must have some order of the locations in M, and we must search through them to find the cheapest path."""
 
 
 # =============================================================================

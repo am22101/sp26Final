@@ -17,13 +17,13 @@
 > per question. Each bullet should be 1-2 sentences max.
 
 - **Why a single shortest-path run from S is not enough:**
-  _Your answer here._
+  The objective of the torchbearer is to go from S to T while visiting every relic location in M, not just going from S to T.
 
 - **What decision remains after all inter-location costs are known:**
-  _Your answer here._
+  The decision still remains to choose the shortest path that visits every location in M starting at S and ending at T.
 
 - **Why this requires a search over orders (one sentence):**
-  _Your answer here._
+  Every potential solution must have some order of the locations in M, and we must search through them to find the cheapest path.
 
 ---
 
