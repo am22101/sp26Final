@@ -1,7 +1,7 @@
 # Development Log – The Torchbearer
 
-**Student Name:** ___________________________
-**Student ID:** ___________________________
+**Student Name:** Aidan McSweeney
+**Student ID:** 129940054
 
 > Instructions: Write at least four dated entries. Required entry types are marked below.
 > Two to five sentences per entry is sufficient. Write entries as you go, not all in one
@@ -10,7 +10,7 @@
 
 ---
 
-## Entry 1 – [Date]: Initial Plan
+## Entry 1 – [5/6/26]: Initial Plan
 
 > Required. Write this before writing any code. Describe your plan: what you will
 > implement first, what parts you expect to be difficult, and how you plan to test.
@@ -19,12 +19,12 @@ The only thing I am certain I should implement right now is finding the shortest
 
 ---
 
-## Entry 2 – [Date]: [Short description]
+## Entry 2 – [5/9/26]: Dijkstra's Implementation
 
 > Required. At least one entry must describe a bug, wrong assumption, or design change
 > you encountered. Describe what went wrong and how you resolved it.
 
-_Your entry here._
+I implemented Dijkstra's Algorithm with a similar structure to the pseudocode given in the Graphs Quiz. It includes the optimization found in the pseudocode given which prunes any explorations along paths to a node we've already computed a better route to. Instead of returning just a list of values, it returns a dict containing the node keys and their respective shortest time to reach from the source node. This will be run multiple times before we can compute the optimal route.
 
 ---
 

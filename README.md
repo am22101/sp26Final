@@ -1,13 +1,8 @@
 # The Torchbearer
 
-**Student Name:** ___________________________
-**Student ID:** ___________________________
+**Student Name:** Aidan McSweeney
+**Student ID:** 129940054
 **Course:** CS 460 – Algorithms | Spring 2026
-
-> This README is your project documentation. Write it the way a developer would document
-> their design decisions , bullet points, brief justifications, and concrete examples where
-> required. You are not writing an essay. You are explaining what you built and why you built
-> it that way. Delete all blockquotes like this one before submitting.
 
 ---
 
@@ -35,8 +30,8 @@
 
 | Source Node Type | Why it is a source |
 |---|---|
-| _node type_ | _one-line reason_ |
-| _node type_ | _one-line reason_ |
+| Start Nodes | Needed to get anywhere since its the only place to start. |
+| Relic Nodes | Need to know shortest paths from relics since we need to visit them all. |
 
 ### Part 2b: Distance Storage
 
@@ -44,20 +39,20 @@
 
 | Property | Your answer |
 |---|---|
-| Data structure name | |
-| What the keys represent | |
-| What the values represent | |
-| Lookup time complexity | |
-| Why O(1) lookup is possible | |
+| Data structure name | Dict |
+| What the keys represent | Vertices |
+| What the values represent | Edges |
+| Lookup time complexity | O(1) |
+| Why O(1) lookup is possible | Hashing |
 
 ### Part 2c: Precomputation Complexity
 
 > State the total complexity and show the arithmetic. Two to three lines max.
 
-- **Number of Dijkstra runs:** _your answer_
-- **Cost per run:** _your answer_
-- **Total complexity:** _your answer_
-- **Justification (one line):** _your answer_
+- **Number of Dijkstra runs:** |M| + 1
+- **Cost per run:** (V + E)logV operations per run
+- **Total complexity:** (|M| + 1) * (V + E)logV total operations
+- **Justification (one line):** We perform V binary heap operations that each cost logV, and run the algorithm on E edges a total of |M| + 1 times because there are |M| relic chambers and 1 start node.
 
 ---
 

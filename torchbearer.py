@@ -2,8 +2,8 @@
 CS 460 – Algorithms: Final Programming Assignment
 The Torchbearer
 
-Student Name: ___________________________
-Student ID:   ___________________________
+Student Name: Aidan McSweeney
+Student ID:   129940054
 
 INSTRUCTIONS
 ------------
@@ -46,10 +46,8 @@ def select_sources(spawn, relics, exit_node):
     -------
     list[node]
         No duplicates. Order does not matter.
-
-    TODO
     """
-    pass
+    return relics.append(spawn)
 
 
 def run_dijkstra(graph, source):
@@ -65,10 +63,24 @@ def run_dijkstra(graph, source):
     dict[node, float]
         Minimum cost from source to every node in graph.
         Unreachable nodes map to float('inf').
-
-    TODO
     """
-    pass
+    value = dict.fromkeys(graph, float('inf'))
+    value[source] = 0
+    pq = []
+    heapq.heappush(pq, (value[source], source))
+    
+    while pq:
+        (current_value, current_node) = heapq.heappop(pq)
+
+        if current_value > value[current_node]:
+            continue
+
+        for (adjacent_node, weight) in graph[current_node]:
+            if value[current_node] + weight < value[adjacent_node]:
+                value[adjacent_node] = value[current_node] + weight
+                heapq.heappush(pq, (value[adjacent_node], adjacent_node))
+        
+    return value
 
 
 def precompute_distances(graph, spawn, relics, exit_node):
