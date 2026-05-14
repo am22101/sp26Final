@@ -25,9 +25,14 @@ import heapq
 # =============================================================================
 
 def explain_problem():
-    return """The objective of the torchbearer is to go from S to T while visiting every relic location in M, not just going from S to T.
-            The decision still remains to choose the shortest path that visits every location in M starting at S and ending at T.
-            Every potential solution must have some order of the locations in M, and we must search through them to find the cheapest path."""
+    return """
+    Why a single shortest-path run from S is not enough:
+    The objective of the torchbearer is to go from S to T while visiting every relic location in M, not just going from S to T.
+    What decision remains after all inter-location costs are known:
+    The decision still remains to choose the shortest path that visits every location in M starting at S and ending at T.
+    Why this requires a search over orders (one sentence):
+    Every potential solution must have some order of the locations in M, and we must search through them to find the cheapest path.
+    """
 
 
 # =============================================================================
@@ -35,35 +40,12 @@ def explain_problem():
 # =============================================================================
 
 def select_sources(spawn, relics, exit_node):
-    """
-    Parameters
-    ----------
-    spawn : node
-    relics : list[node]
-    exit_node : node
-
-    Returns
-    -------
-    list[node]
-        No duplicates. Order does not matter.
-    """
     return relics.append(spawn)
 
 
 def run_dijkstra(graph, source):
-    """
-    Parameters
-    ----------
-    graph : dict[node, list[tuple[node, int]]]
-        graph[u] = [(v, cost), ...]. All costs are nonnegative integers.
-    source : node
-
-    Returns
-    -------
-    dict[node, float]
-        Minimum cost from source to every node in graph.
-        Unreachable nodes map to float('inf').
-    """
+    if not graph or not source:
+        return
     value = dict.fromkeys(graph, float('inf'))
     value[source] = 0
     pq = []
@@ -78,29 +60,18 @@ def run_dijkstra(graph, source):
         for (adjacent_node, weight) in graph[current_node]:
             if value[current_node] + weight < value[adjacent_node]:
                 value[adjacent_node] = value[current_node] + weight
-                heapq.heappush(pq, (value[adjacent_node], adjacent_node))
-        
+                heapq.heappush(pq, (value[adjacent_node], adjacent_node))        
     return value
 
 
 def precompute_distances(graph, spawn, relics, exit_node):
-    """
-    Parameters
-    ----------
-    graph : dict[node, list[tuple[node, int]]]
-    spawn : node
-    relics : list[node]
-    exit_node : node
-
-    Returns
-    -------
-    dict[node, dict[node, float]]
-        Nested structure supporting dist_table[u][v] lookups
-        for every source u your design requires.
-
-    TODO
-    """
-    pass
+    if not graph or not spawn or not relics or not exit_node:
+        return
+    dist_table = dict()
+    sources = select_sources(spawn, relics, exit_node)
+    for current_node in sources:
+        dist_table[current_node] = run_dijkstra(graph, current_node)
+    return dist_table
 
 
 # =============================================================================
@@ -108,16 +79,20 @@ def precompute_distances(graph, spawn, relics, exit_node):
 # =============================================================================
 
 def dijkstra_invariant_check():
+    return """
+    What the Invariant Means For nodes already finalized (in S):
+    Distance recorded is the true shortest path.
+    What the Invariant Means For nodes not yet finalized (not in S):
+    Distance recorded is the shortest path so far made up nodes who all have a true shortest path to them.
+    Initialization: 
+    Before the first iteration, all nodes are undiscovered except for the start node. The true shortest path from any node to itself is 0, and the undiscovered node paths are all initialized to infinity because they have not been visited.  
+    Maintenance: 
+    When the algorithm chooses edges to explore, it always chooses them in order of increasing cost. When a node is finalized, it is visited via choosing the least expensive edge possible from that point. Since all weights are non-negative, there is no way a future choice would beat the path that uses the cheapest edge to that node.
+    Termination: 
+    Since the algorithm terminates only when all possible to reach nodes have been visited, every node will be finalized and thus be in S. Therefore, the algorithm finds the true shortest path from the source to all reachable nodes.
+    Why This Matters for the Route Planner:
+    From the goal statement, we must find the shortest path from S to T visiting all M nodes, which requires finding the correct shortest path from any of these nodes to one another.
     """
-    Returns
-    -------
-    str
-        Your Part 3 README answers, written as a string.
-        Must match what you wrote in README Part 3.
-
-    TODO
-    """
-    return "TODO"
 
 
 # =============================================================================
@@ -125,16 +100,21 @@ def dijkstra_invariant_check():
 # =============================================================================
 
 def explain_search():
+    return """
+    The failure mode: Not visiting every relic chamber before reaching the exit
+    Counter-example setup:
+        G = (
+            S: (B, 2), (C, 4)
+            B: (T, 1)
+            C: (B, 2), (T, 3)
+            T: 
+            )   
+        M = (B, C)
+    What greedy picks: Greedy will choose the cheapest edge, SB
+    What optimal picks: Optimal chooses SC, because its the only way to visit all relic chambers.
+    Why greedy loses: Greedy has now chosen a path where the only edge avaliable leads to the exit, but it still hasn't visited all relic chambers yet.
+    What the Algorithm Must Explore: The algorithm must explore optimal orders of the relic chambers.
     """
-    Returns
-    -------
-    str
-        Your Part 4 README answers, written as a string.
-        Must match what you wrote in README Part 4.
-
-    TODO
-    """
-    return "TODO"
 
 
 # =============================================================================

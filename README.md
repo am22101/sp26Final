@@ -8,9 +8,6 @@
 
 ## Part 1: Problem Analysis
 
-> Document why this problem is not just a shortest-path problem. Three bullet points, one
-> per question. Each bullet should be 1-2 sentences max.
-
 - **Why a single shortest-path run from S is not enough:**
   The objective of the torchbearer is to go from S to T while visiting every relic location in M, not just going from S to T.
 
@@ -49,47 +46,41 @@
 
 > State the total complexity and show the arithmetic. Two to three lines max.
 
-- **Number of Dijkstra runs:** |M| + 1
-- **Cost per run:** (V + E)logV operations per run
-- **Total complexity:** (|M| + 1) * (V + E)logV total operations
-- **Justification (one line):** We perform V binary heap operations that each cost logV, and run the algorithm on E edges a total of |M| + 1 times because there are |M| relic chambers and 1 start node.
+- **Number of Dijkstra runs:** k + 1
+- **Cost per run:** (n + m)logn operations per run
+- **Total complexity:** (k) * (n + m)logn total operations
+- **Justification (one line):** We perform n binary heap operations that each cost logn, and run the algorithm on m edges a total of k + 1 times because there are k relic chambers and 1 start node.
 
 ---
 
 ## Part 3: Algorithm Correctness
 
-> Document your understanding of why Dijkstra produces correct distances.
-> Bullet points and short sentences throughout. No paragraphs.
-
 ### Part 3a: What the Invariant Means
 
-> Two bullets: one for finalized nodes, one for non-finalized nodes.
-> Do not copy the invariant text from the spec.
-
 - **For nodes already finalized (in S):**
-  _Your answer here._
+  Distance recorded is the true shortest path.
 
 - **For nodes not yet finalized (not in S):**
-  _Your answer here._
+  Distance recorded is the shortest path so far made up nodes who all have a true shortest path to them.
 
 ### Part 3b: Why Each Phase Holds
 
 > One to two bullets per phase. Maintenance must mention nonnegative edge weights.
 
 - **Initialization : why the invariant holds before iteration 1:**
-  _Your answer here._
+  Before the first iteration, all nodes are undiscovered except for the start node. The true shortest path from any node to itself is 0, and the undiscovered node paths are all initialized to infinity because they have not been visited.  
 
 - **Maintenance : why finalizing the min-dist node is always correct:**
-  _Your answer here._
+  When the algorithm chooses edges to explore, it always chooses them in order of increasing cost. When a node is finalized, it is visited via choosing the least expensive edge possible from that point. Since all weights are non-negative, there is no way a future choice would beat the path that uses the cheapest edge to that node.
 
 - **Termination : what the invariant guarantees when the algorithm ends:**
-  _Your answer here._
+  Since the algorithm terminates only when all possible to reach nodes have been visited, every node will be finalized and thus be in S. Therefore, the algorithm finds the true shortest path from the source to all reachable nodes.
 
 ### Part 3c: Why This Matters for the Route Planner
 
 > One sentence connecting correct distances to correct routing decisions.
 
-_Your answer here._
+From the goal statement, we must find the shortest path from S to T visiting all M nodes, which requires finding the correct shortest path from any of these nodes to one another.
 
 ---
 
@@ -100,17 +91,27 @@ _Your answer here._
 > State the failure mode. Then give a concrete counter-example using specific node names
 > or costs (you may use the illustration example from the spec). Three to five bullets.
 
-- **The failure mode:** _Your answer here._
-- **Counter-example setup:** _Your answer here._
-- **What greedy picks:** _Your answer here._
-- **What optimal picks:** _Your answer here._
-- **Why greedy loses:** _Your answer here._
+- **The failure mode:** Not visiting every relic chamber before reaching the exit
+- **Counter-example setup:** Take the following graph:
+G = (
+  S: (B, 2), (C, 4)
+  B: (T, 1)
+  C: (B, 2), (T, 3)
+  T: 
+)
+
+and list of relic chambers:
+
+M = (B, C)
+- **What greedy picks:** Greedy will choose the cheapest edge, SB
+- **What optimal picks:** Optimal chooses SC, because its the only way to visit all relic chambers.
+- **Why greedy loses:** Greedy has now chosen a path where the only edge avaliable leads to the exit, but it still hasn't visited all relic chambers yet.
 
 ### What the Algorithm Must Explore
 
 > One bullet. Must use the word "order."
 
-- _Your answer here._
+- The algorithm must explore optimal orders of the relic chambers.
 
 ---
 

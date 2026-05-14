@@ -28,9 +28,9 @@ I implemented Dijkstra's Algorithm with a similar structure to the pseudocode gi
 
 ---
 
-## Entry 3 – [Date]: [Short description]
+## Entry 3 – [5/13/26]: Search Setup
 
-_Your entry here._
+I finished most of the README documentation regarding algorithm correctness and why a greedy approach would fail finding the optimal route from the shortest paths given by multiple runs of Dijsktra's. I also implemented the short function that creates the 2d table from running Dijkstra's on all the source nodes. I plan to implement the search algorithm next after finalizing the state and search space in the README.
 
 ---
 
