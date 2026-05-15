@@ -111,7 +111,7 @@ M = (B, C)
 
 > One bullet. Must use the word "order."
 
-- The algorithm must explore optimal orders of the relic chambers.
+- The algorithm must search over orders of the relic chambers
 
 ---
 
@@ -124,9 +124,9 @@ M = (B, C)
 
 | Component | Variable name in code | Data type | Description |
 |---|---|---|---|
-| Current location | | | |
-| Relics already collected | | | |
-| Fuel cost so far | | | |
+| Current location | current_loc | node | current chamber being explored |
+| Relics already collected | relics_remaining | dict | how many relic chambers have been visited |
+| Fuel cost so far | cost_so_far | float | total cost of edge weights traversed |
 
 ### Part 5b: Data Structure for Visited Relics
 
@@ -134,18 +134,18 @@ M = (B, C)
 
 | Property | Your answer |
 |---|---|
-| Data structure chosen | |
-| Operation: check if relic already collected | Time complexity: |
-| Operation: mark a relic as collected | Time complexity: |
-| Operation: unmark a relic (backtrack) | Time complexity: |
-| Why this structure fits | |
+| Data structure chosen | dict (hashmap) |
+| Operation: check if relic already collected | Time complexity: O(1) with good hashing |
+| Operation: mark a relic as collected | Time complexity: O(1) |
+| Operation: unmark a relic (backtrack) | Time complexity: O(1) |
+| Why this structure fits | Because this problem requires a lot of lookups and updates, hashmaps provide O(1) average for both. |
 
 ### Part 5c: Worst-Case Search Space
 
 > Two bullets.
 
-- **Worst-case number of orders considered:** _Your answer (in terms of k)._
-- **Why:** _One-line justification._
+- **Worst-case number of orders considered:** O(k!)
+- **Why:** Because each node is distinct, there are k! possible ways to order the list of nodes.
 
 ---
 
@@ -155,23 +155,23 @@ M = (B, C)
 
 > Three bullets.
 
-- **What is tracked:** _Your answer here._
-- **When it is used:** _Your answer here._
-- **What it allows the algorithm to skip:** _Your answer here._
+- **What is tracked:** cost_so_far
+- **When it is used:** pruning and determining best solutions
+- **What it allows the algorithm to skip:** paths that cost more or equal to the best path already found.
 
 ### Part 6b: Lower Bound Estimation
 
 > Three bullets.
 
-- **What information is available at the current state:** _Your answer here._
-- **What the lower bound accounts for:** _Your answer here._
-- **Why it never overestimates:** _Your answer here._
+- **What information is available at the current state:** The current node, order, and cost so far
+- **What the lower bound accounts for:** It accounts for all nonnegative edge values, even 0
+- **Why it never overestimates:** It can never overestimate because it only includes costs already travelled.
 
 ### Part 6c: Pruning Correctness
 
 > One to two bullets. Explain why pruning is safe.
 
-- _Your answer here._
+- Pruning is safe because there are no negative weight edges, which means the lower bound estimation is always less than or equal to the true optimal cost. 
 
 ---
 
@@ -179,4 +179,4 @@ M = (B, C)
 
 > Bullet list. If none beyond lecture notes, write that.
 
-- _Your references here._
+- I used the Graphs Practice Quiz pseudocode as reference for building my Dijkstra's Algorithm implementation. 

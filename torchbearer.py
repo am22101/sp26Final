@@ -25,6 +25,13 @@ import heapq
 # =============================================================================
 
 def explain_problem():
+    """
+    Returns
+    -------
+    str
+        Your Part 1 README answers, written as a string.
+        Must match what you wrote in README Part 1.
+    """
     return """
     Why a single shortest-path run from S is not enough:
     The objective of the torchbearer is to go from S to T while visiting every relic location in M, not just going from S to T.
@@ -40,11 +47,36 @@ def explain_problem():
 # =============================================================================
 
 def select_sources(spawn, relics, exit_node):
-    return relics.append(spawn)
+    """
+    Parameters
+    ----------
+    spawn : node
+    relics : list[node]
+    exit_node : node
+
+    Returns
+    -------
+    list[node]
+        No duplicates. Order does not matter.
+    """
+    return [spawn] + list(relics)
 
 
 def run_dijkstra(graph, source):
-    if not graph or not source:
+    """
+    Parameters
+    ----------
+    graph : dict[node, list[tuple[node, int]]]
+        graph[u] = [(v, cost), ...]. All costs are nonnegative integers.
+    source : node
+
+    Returns
+    -------
+    dict[node, float]
+        Minimum cost from source to every node in graph.
+        Unreachable nodes map to float('inf').
+    """
+    if not graph or source not in graph:
         return
     value = dict.fromkeys(graph, float('inf'))
     value[source] = 0
@@ -65,9 +97,21 @@ def run_dijkstra(graph, source):
 
 
 def precompute_distances(graph, spawn, relics, exit_node):
-    if not graph or not spawn or not relics or not exit_node:
-        return
-    dist_table = dict()
+    """
+    Parameters
+    ----------
+    graph : dict[node, list[tuple[node, int]]]
+    spawn : node
+    relics : list[node]
+    exit_node : node
+
+    Returns
+    -------
+    dict[node, dict[node, float]]
+        Nested structure supporting dist_table[u][v] lookups
+        for every source u your design requires.
+    """
+    dist_table = {}
     sources = select_sources(spawn, relics, exit_node)
     for current_node in sources:
         dist_table[current_node] = run_dijkstra(graph, current_node)
@@ -138,14 +182,19 @@ def find_optimal_route(dist_table, spawn, relics, exit_node):
     tuple[float, list[node]]
         (minimum_fuel_cost, ordered_relic_list)
         Returns (float('inf'), []) if no valid route exists.
-
-    TODO
     """
-    pass
+    relics_visited_order = []
+    minimum_fuel_cost = [float('inf')]
+    best_route = []
+    relics_visited = dict.fromkeys(relics, False)
+    _explore(dist_table, spawn, relics, relics_visited, relics_visited_order,
+             0.0, exit_node, best_route, minimum_fuel_cost)
+
+    return (minimum_fuel_cost[0], best_route)
 
 
-def _explore(dist_table, current_loc, relics_remaining, relics_visited_order,
-             cost_so_far, exit_node, best):
+def _explore(dist_table, current_loc, relics, relics_visited, relics_visited_order,
+             cost_so_far, exit_node, best, best_cost):
     """
     Recursive helper for find_optimal_route.
 
@@ -153,27 +202,68 @@ def _explore(dist_table, current_loc, relics_remaining, relics_visited_order,
     ----------
     dist_table : dict[node, dict[node, float]]
     current_loc : node
-    relics_remaining : collection
+    relics: list[node]
+    relics_remaining : dict[node, bool]
         Your chosen data structure from README Part 5b.
     relics_visited_order : list[node]
     cost_so_far : float
     exit_node : node
     best : list
         Mutable container for the best solution found so far.
+    best_cost : list
+        Mutable singleton container for the cost of the best solution found so far.
 
     Returns
     -------
     None
         Updates best in place.
-
-    TODO
     Implement: base case, pruning, recursive case, backtracking.
 
     REQUIRED: Add a 1-2 sentence comment near your pruning condition
     explaining why it is safe (cannot skip the optimal solution).
     This comment is graded.
     """
-    pass
+    
+    # Pruning condition is safe because it prunes only when it has achieved a greater cost before 
+    # even accounting for the cost of the edge to reach the exit. Even in the best case scenario, 
+    # (edge weight is 0 to exit), it is still a worse solution than we have found.
+    if cost_so_far >= best_cost[0]:
+        return
+    
+    # Possible solution
+    if all(relics_visited.values()):
+        exit_cost = dist_table[current_loc][exit_node]
+
+        if exit_cost == float('inf'):
+            return
+        
+        total_cost = cost_so_far + exit_cost
+
+        if total_cost < best_cost[0]:
+            best_cost[0] = total_cost
+            best[:] = relics_visited_order[:]
+
+        return
+
+    for relic_chamber in relics:
+        # Visited check
+        if relics_visited[relic_chamber]:
+            continue
+
+        new_cost = cost_so_far + dist_table[current_loc][relic_chamber]
+        if new_cost == float('inf'):
+            continue
+
+        relics_visited[relic_chamber] = True
+        relics_visited_order.append(relic_chamber)
+        _explore(dist_table, relic_chamber, relics, relics_visited, relics_visited_order, 
+                 new_cost, exit_node, best, best_cost)
+        
+        # Backtrack after returning from the above call
+        relics_visited_order.pop()
+        relics_visited[relic_chamber] = False
+    return
+
 
 
 # =============================================================================
@@ -194,10 +284,13 @@ def solve(graph, spawn, relics, exit_node):
     tuple[float, list[node]]
         (minimum_fuel_cost, ordered_relic_list)
         Returns (float('inf'), []) if no valid route exists.
-
-    TODO
     """
-    pass
+    # Malformed Argument
+    if not graph or spawn not in graph or not relics or exit_node not in graph:
+        return (float('inf'), [])
+    distance_table = precompute_distances(graph, spawn, relics, exit_node)
+    return find_optimal_route(distance_table, spawn, relics, exit_node)
+
 
 
 # =============================================================================
